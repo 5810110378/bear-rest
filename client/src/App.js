@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { deleteBear } from './actions';
+import { deleteBear, createBear } from './actions';
 
 
 
@@ -8,8 +8,16 @@ import { deleteBear } from './actions';
 class App extends Component {
   constructor(props){
         super(props)
-       
+        this.state = {bearName: ''};
       }
+      onBearNameChanged = (e) => {
+            this.setState({bearName: e.target.value});
+          }
+          toCreateBear = () => {
+            this.props.createBear({name: this.state.bearName});
+            this.setState({bearName: ''});
+          }
+        
   render() {
     let bears = this.props.bear;
     return (
@@ -31,5 +39,6 @@ let mapStateToProps = (state) => (
     {bear: state.bear}
   )
   export default connect(mapStateToProps, {
-      deleteBear: deleteBear
+      deleteBear,
+      createBear,
     })(App);
