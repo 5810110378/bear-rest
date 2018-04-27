@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
-let reducer = function(state = [], action){
+let bearReducer = function(state = [], action){
   if(action){
     if(action.type == 'FETCH_BEAR'){
       return action.payload
@@ -13,7 +13,9 @@ let reducer = function(state = [], action){
   }
   return state
 }
-let store = createStoreWithMiddleware(reducer)
+let store = createStoreWithMiddleware(combineReducers({
+    bear: bearReducer
+  }))
 
 let fetchBearActionCreator = function(){
   return (dispatch) => {
@@ -27,7 +29,7 @@ let fetchBearActionCreator = function(){
 class App extends Component {
   constructor(props){
         super(props)
-        this.state = {data: []};
+        this.setState({data: store.getState().bear})
       }
       componentDidMount(){
         store.subscribe(() => {
